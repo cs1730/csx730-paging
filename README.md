@@ -42,13 +42,13 @@ useful as a reference.
    * `N` -- a number such that `1ul << N` denotes the page size in bytes. As a
 	 start, we will assume a page size of `4` bytes.
 
-   * `PO_MASK` -- an `addr_t` bit mask that masks the lower `N` bits of a
-	 virtual / logical memory address, denoting the region used for the
-	 page offset.
+   * `PO_MASK` -- an `addr_t` bit [mask](https://en.wikipedia.org/wiki/Mask_(computing))
+      that masks the lower `N` bits of a virtual / logical memory address, denoting the 
+      region used for the page offset.
 
-   * `PN_MASK` -- an `addr_t` bit mask that masks the higher `M - N` bits of
-	 a virtual / logical memory address, denoting the region used for the
-	 page number.
+   * `PN_MASK` -- an `addr_t` bit [mask](https://en.wikipedia.org/wiki/Mask_(computing))
+     that masks the higher `M - N` bits of a virtual / logical memory address, denoting 
+     the region used for the page number.
 
    * `PG_SIZE` -- the page size, calculated using `N`.
 
