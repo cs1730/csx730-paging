@@ -111,7 +111,14 @@ useful as a reference.
 1. In your `main` funtion, initialize both memory spaces to `' '` (i.e., the
    whitespace character.
 
-1. Next...
+1. Next, reinitalize the virtual memory space to contain the alphabet
+   characters `a`, `b`, ..., etc. As you initialize each space, use your
+   `virt_to_phys` function to also place the character in the appropriate
+   location within the physical memory space.
+
+1. Finally, print out all addresses in each space along with their stored
+   values. If done correctly, it should match up with Figure 9.10 in
+   Silberschatz, Gagne, and Galvin.
 
 **SUBMISSION**
 
