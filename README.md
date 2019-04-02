@@ -1,14 +1,14 @@
 # csx730-paging Paging Activity
 
-**Paging** is a common memory management scheme that avoids external fragmentation 
+**Paging** is a common memory management scheme that avoids external fragmentation
 by splitting physical memory into fixed-sized frames and logical memory into blocks
 of the same size called pages. In this activity, you will implement some functions
 for basic page-based address translation using a page table.
 
 ### Getting Started
 
-1. Form into **small groups of two or three** people. These instructions assume that at least one group 
-   member is logged into the Nike. 
+1. Form into **small groups of two or three** people. These instructions assume that at least one group
+   member is logged into the Nike.
 
 1. Use Git to clone the repository for this exercise onto Nike into a subdirectory called `csx730-deadlock`:
 
@@ -16,75 +16,114 @@ for basic page-based address translation using a page table.
    $ git clone https://github.com/cs1730/csx730-paging.git
    ```
 
-1. Change into the `csx730-paging` directory that was just created and look around. 
+1. Change into the `csx730-paging` directory that was just created and look around.
    There should be a couple different files already present, including a magic `Makefile`
    that will compile, assemble, and link stand-alone C files individually.
-   
+
 ### Activity Questions
 
 This activity is open book, open notes, and asking your instructor questions is allowed.
 You may find Ch. 9 of _Operating System Concepts_ by Silberschatz, Gagne, and Galvin
 useful as a reference.
 
-1. Modify `SUBMISSION.md` to include the name, UGA ID number, course number (4730 or 6730) 
-   for each group member. Then, **sign the piece of paper that your instructor has at the front 
+1. Modify `SUBMISSION.md` to include the name, UGA ID number, course number (4730 or 6730)
+   for each group member. Then, **sign the piece of paper that your instructor has at the front
    of the room.**
-   
-1. ~Under "Necessary Conditions" in `SUBMISSION.md`, list and define the four~
-   ~conditions that must hold simnultaneously in a system for a deadlock to~
-   ~arise, according to Silberschatz, Gagne, and Galvin.~
-   
-1. Experiment with `deadlock.c` by increasing `NTHREAD` and witnessing deadlocks.
-   Under the sub-headings of "Resource Allocation Graph" in `SUBMISSION.md`, provide
-   example output produced by the program, the edge set for the resource allocation
-   graph induced by the output, and the observed cycle. An example for `NTHREAD = 2`
-   is provided but should be replace with your own example.
 
-**CHECKPOINT:** Ask your instructor if you have any questions.
+1. Under "Definitions" in `SUBMISSION.md`, provide the definition for each term
+   listed, according to Silberschatz, Gagne, and Galvin.
 
-1. Create a copy of `deadlock.c` called `safety.c`. 
+1. In `paging.c`, create a [typedef declaration] for an `addr_t` type based on
+   an `unsigned long`, then define the following constants:
 
-1. In this checkpoint, you will be implementing part of the banker's algorithm for
-   avoiding deadlocks. Several data structures must be maintained to implement
-   the banker's algorithm. Under "Data Structures" sub-heading of 
-   "Banker's Algorithm" in `SUBMISSION.md`, list and define these data
-   structures.
-   
-1. In `safety.c`, implement the Banker's Safety Algorithm as described by
-   Silberschatz, Gagne, and Galvin in Ch. 8.6.3.1.
-   
-   * Your program should print `SAFE` or `UNSAFE` before and after each resource
-     is acquired by a thread.
-   * You should test it for `2 ≤ NTHREAD ≤ 5` and resource instance counts as
-     high as `2`.
-   
-1. Under "Safety Algorithm Examples" sub-heading of "Banker's Algorithm" in 
-   `SUBMISSION.md`, provide an example output that demonstrate that not all 
-   unsafe states lead to deadlock.
-   
+   * `M` -- a number such that `1ul << M` denotes the number of logical addresses
+     available using an `addr_t` type.
+
+   * `N` -- a number such that `1ul << N` denotes the page size in bytes. As a
+	 start, we will assume a page size of `4` bytes.
+
+   * `PO_MASK` -- an `addr_t` bit mask that masks the lower `N` bits of a
+	 virtual / logical memory address, denoting the region used for the
+	 page offset.
+
+   * `PN_MASK` -- an `addr_t` bit mask that masks the higher `M - N` bits of
+	 a virtual / logical memory address, denoting the region used for the
+	 page number.
+
+   * `PG_SIZE` -- the page size, calculated using `N`.
+
+1. Check your masks against the following virtual addresses:
+
+   | Virtual Address    | DEC  | PN  | PO  |
+   |--------------------|------|-----|-----|
+   | `0000000000000001` | `1`  | `0` | `1` |
+   | `000000000000000b` | `11` | `2` | `3` |
+   | `0000000000000000` | `0`  | `0` | `0` |
+   | `0000000000000006` | `6`  | `1` | `2` |
+   | `000000000000000f` | `15` | `3` | `3` |
+   | `0000000000000009` | `9`  | `2` | `1` |
+   | `0000000000000007` | `7`  | `1` | `3` |
+   | `000000000000000d` | `13` | `3` | `1` |
+   | `0000000000000003` | `3`  | `0` | `3` |
+   | `000000000000000f` | `15` | `3` | `3` |
+
 **CHECKPOINT**
 
-1. Create a copy of `safety.c` called `banker.c`.
+1. In `paging.c`, declare a page table with four entries:
 
-1. In `banker.c`, implement the Banker's Resource-Request Algorithm as described by
-   Silberschatz, Gagne, and Galvin in Ch. 8.6.3.2.
-   
-   * You should test it for `2 ≤ NTHREAD ≤ 5`.
-   * While not very technical, you can be somewhat confident that your 
-     implementation is correct if no deadlock occurs within the first 30 seconds
-	 of execution.
+   ```c
+   addr_t page_table [4] = { 5, 6, 1, 2 };
+   ```
+
+1. Next, implement the following functions:
+
+   * `addr_t virt_to_phys(addr_t virt);` -- returns the physical address for a
+     given virtual address based on the page table.
+
+   * `addr_t phys_to_virt(addr_t phys);` -- returns the virtual address for a
+     given physical address based on the page table.
+
+1. Verify that your functions work against the following addresses:
+
+   | Virtual Address    | Physical Address   |
+   |--------------------|--------------------|
+   | `0000000000000001` | `0000000000000015` |
+   | `000000000000000b` | `0000000000000007` |
+   | `0000000000000000` | `0000000000000014` |
+   | `0000000000000006` | `000000000000001a` |
+   | `000000000000000f` | `000000000000000b` |
+   | `0000000000000009` | `0000000000000005` |
+   | `0000000000000007` | `000000000000001b` |
+   | `000000000000000d` | `0000000000000009` |
+   | `0000000000000003` | `0000000000000017` |
+   | `000000000000000f` | `000000000000000b` |
+
+**CHECKPOINT**
+
+1. In `paging.c`, declare some global variables to represent a virtual memory
+   space and a physical memory space:
+
+   ```c
+   char virt_mem [PG_SIZE * 4]; // four virtual pages
+   char phys_mem [PG_SIZE * 8]; // eight physical pages
+   ```
+
+1. In your `main` funtion, initialize both memory spaces to `' '` (i.e., the
+   whitespace character.
+
+1. Next...
 
 **SUBMISSION**
 
-1. **Before 11:55 PM on WED**, double check that your group member names are listed 
-   in `SUBMISSION.md` as well as the piece of paper that your instructor has at the 
-   front of the room, then submit your activity attempt using the `submit` command. 
+1. **Before 11:55 PM on WED**, double check that your group member names are listed
+   in `SUBMISSION.md` as well as the piece of paper that your instructor has at the
+   front of the room, then submit your activity attempt using the `submit` command.
    From the parent directory:
-   
+
    ```
-   $ submit csx730-deadlock csx730
+   $ submit csx730-paging csx730
    ```
-   
+
 1. Remember to share this directory with your group members!
 
 <hr/>
