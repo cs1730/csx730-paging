@@ -77,7 +77,8 @@ useful as a reference.
    
    Here, each index in the page table refers to a page number in virtual memory. 
    Each value in the page table holds page's corresponding frame number in physical
-   memory.
+   memory. An alternative approach might use frame addresses instead of frame
+   numbers.
 
 1. Next, implement the following functions:
 
