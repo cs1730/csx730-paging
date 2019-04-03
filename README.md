@@ -84,7 +84,7 @@ useful as a reference.
    ```
    
    Here, each index in the page table refers to a page number in virtual memory. 
-   Each value in the page table holds page's corresponding frame number in physical
+   Each value in the page table holds that page's corresponding frame number in physical
    memory. An alternative approach might use frame addresses instead of frame
    numbers.
 
