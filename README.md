@@ -10,7 +10,7 @@ for basic page-based address translation using a page table.
 1. Form into **small groups of two or three** people. These instructions assume that at least one group
    member is logged into the Nike.
 
-1. Use Git to clone the repository for this exercise onto Nike into a subdirectory called `csx730-deadlock`:
+1. Use Git to clone the repository for this exercise onto Nike into a subdirectory called `csx730-paging`:
 
    ```
    $ git clone https://github.com/cs1730/csx730-paging.git
@@ -122,7 +122,7 @@ useful as a reference.
    ```
 
 1. In your `main` funtion, initialize both memory spaces to `' '` (i.e., the
-   whitespace character.
+   whitespace character).
 
 1. Next, reinitalize the virtual memory space to contain the alphabet
    characters `a`, `b`, ..., etc. As you initialize each space, use your
