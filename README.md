@@ -37,18 +37,22 @@ useful as a reference.
    an `unsigned long`, then define the following constants:
 
    * `M` -- a number such that `1ul << M` denotes the number of logical addresses
-     available using an `addr_t` type.
+     available using an `addr_t` type. Recall that bitwise left shifting of an integer
+     is similar to multiplying by a power of two.
 
    * `N` -- a number such that `1ul << N` denotes the page size in bytes. As a
-	 start, we will assume a page size of `4` bytes.
+     start, we will assume a page size of `4` bytes. Recall that bitwise left shifting 
+     of an integer is similar to multiplying by a power of two.
 
    * `PO_MASK` -- an `addr_t` bit [mask](https://en.wikipedia.org/wiki/Mask_(computing))
       that masks the lower `N` bits of a virtual / logical memory address, denoting the 
-      region used for the page offset.
+      region used for the page offset. Like the others, this is also a constant value.
+      We're not asking you to write a function-like macro.
 
    * `PN_MASK` -- an `addr_t` bit [mask](https://en.wikipedia.org/wiki/Mask_(computing))
      that masks the higher `M - N` bits of a virtual / logical memory address, denoting 
-     the region used for the page number.
+     the region used for the page number. Like the others, this is also a constant value.
+      We're not asking you to write a function-like macro.
 
    * `PG_SIZE` -- the page size, calculated using `N`.
 
@@ -66,6 +70,10 @@ useful as a reference.
    | `000000000000000d` | `13` | `3` | `1` |
    | `0000000000000003` | `3`  | `0` | `3` |
    | `000000000000000f` | `15` | `3` | `3` |
+   
+   where DEC denotes the decimal representation of the address,
+   PN denotes the page number, and
+   PO denotes the page offset.
 
 **CHECKPOINT**
 
